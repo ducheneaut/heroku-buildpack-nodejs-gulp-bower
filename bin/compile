@@ -4,15 +4,23 @@ set -e            # fail fast
 set -o pipefail   # don't ignore exit codes when piping output
 # set -x          # enable debugging
 
-# Configure directories
-build_dir=$1
-cache_dir=$2
-env_dir=$3
-
 bp_dir=$(cd $(dirname $0); cd ..; pwd)
 
 # Load some convenience functions like status(), echo(), and indent()
 source $bp_dir/bin/common.sh
+
+# Load user config
+if [ -e $1/.client ]; then
+  status "Load config from .client"
+  source $1/.client
+fi
+
+# Configure directories
+build_dir=$1/${CLIENT_DIR:-"client"}
+cache_dir=$2
+env_dir=$3
+
+status "build_dir: $build_dir"
 
 # Output npm debug info on error
 trap cat_npm_debug_log ERR
