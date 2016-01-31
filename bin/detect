@@ -1,7 +1,18 @@
 #!/usr/bin/env bash
 # bin/detect <build-dir>
 
-if [ -f $1/package.json ]; then
+# Load user config
+if [ -e $1/.client ]; then
+  status "Load config from .client"
+  source $1/.client
+fi
+
+# Configure directories
+build_dir=$1/${CLIENT_DIR:-"client"}
+
+status "build_dir: $build_dir"
+
+if [ -f $build_dir/package.json ]; then
   echo "Node.js" && exit 0
 else
   echo "no" && exit 1
